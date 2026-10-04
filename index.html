@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07111f">
+    <meta name="description" content="Guía interactiva para desarrollar un curso basado en el modelo ADKAR.">
+    <title>Guía de Curso ADKAR | Instructor</title>
+    <style>
+
+:root{
+    --bg:#07111f;
+    --bg-soft:#0b1728;
+    --surface:#0f1d31;
+    --surface-2:#13243b;
+    --border:rgba(148,163,184,.18);
+    --text:#e8eef7;
+    --muted:#9fb0c5;
+    --primary:#8b5cf6;
+    --primary-2:#06b6d4;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --shadow:0 18px 45px rgba(0,0,0,.25);
+    --radius:18px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+    min-height:100vh;
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 15% 0%,rgba(139,92,246,.14),transparent 32rem),
+        radial-gradient(circle at 85% 10%,rgba(6,182,212,.10),transparent 28rem),
+        var(--bg);
+    line-height:1.65;
+}
+button{font:inherit}
+.container{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+
+.progress-bar-container{
+    position:sticky;top:0;z-index:1000;
+    padding:14px 0 12px;
+    background:rgba(7,17,31,.88);
+    backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--border);
+}
+.progress-info{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:20px;margin-bottom:9px;
+}
+.progress-title{font-weight:800}
+.progress-stats{display:flex;gap:14px;color:var(--muted);font-size:.9rem}
+.progress-bar{
+    height:8px;background:#1c2b40;border-radius:999px;overflow:hidden;
+}
+.progress-fill{
+    width:0;height:100%;
+    background:linear-gradient(90deg,var(--primary),var(--primary-2));
+    border-radius:inherit;transition:width .45s ease,background .45s ease;
+}
+
+.nav-tabs{
+    position:sticky;top:67px;z-index:900;
+    background:rgba(11,23,40,.92);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+}
+.nav-tabs-inner{
+    width:min(1180px,calc(100% - 32px));margin:auto;
+    display:flex;gap:6px;overflow-x:auto;padding:10px 0;
+    scrollbar-width:thin;
+}
+.nav-tab{
+    flex:0 0 auto;border:1px solid transparent;
+    color:var(--muted);background:transparent;
+    padding:10px 14px;border-radius:12px;cursor:pointer;
+    transition:.25s ease;white-space:nowrap;
+}
+.nav-tab:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-tab.active{
+    color:#fff;background:linear-gradient(135deg,rgba(139,92,246,.24),rgba(6,182,212,.12));
+    border-color:rgba(139,92,246,.38);
+}
+
+.section{display:none;padding:58px 0 20px;animation:fadeUp .35s ease}
+.section.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.section-title{font-size:clamp(2rem,4vw,3.1rem);line-height:1.1;letter-spacing:-.04em;margin-bottom:10px}
+.section-subtitle{color:var(--muted);max-width:820px;font-size:1.05rem;margin-bottom:34px}
+
+.intro-grid,.eval-grid,.resources-grid,.tips-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+}
+.intro-card,.eval-card,.resource-card,.tip-card{
+    background:linear-gradient(145deg,rgba(19,36,59,.92),rgba(15,29,49,.82));
+    border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px;box-shadow:var(--shadow);
+}
+.intro-card{min-height:190px}
+.intro-card-icon,.eval-icon,.resource-icon{font-size:2rem;margin-bottom:12px}
+.intro-card h3,.eval-card h3,.resource-info h3,.tip-card h3{margin-bottom:8px}
+.intro-card p,.eval-card p,.resource-info p,.tip-card p{color:var(--muted)}
+
+.info-box{
+    margin-top:28px;padding:20px 22px;
+    border:1px solid rgba(6,182,212,.28);
+    border-left:4px solid var(--primary-2);
+    border-radius:14px;background:rgba(6,182,212,.07);
+}
+.info-box.warning{border-color:rgba(245,158,11,.28);border-left-color:var(--warning);background:rgba(245,158,11,.07)}
+.info-box.success{border-color:rgba(16,185,129,.28);border-left-color:var(--success);background:rgba(16,185,129,.07)}
+
+.module-card{
+    margin:18px 0;border:1px solid var(--border);border-radius:var(--radius);
+    background:rgba(15,29,49,.76);overflow:hidden;
+}
+.module-header{
+    display:flex;align-items:center;gap:18px;padding:20px;
+    cursor:pointer;transition:background .2s ease;
+}
+.module-header:hover{background:rgba(255,255,255,.035)}
+.module-number{
+    width:52px;height:52px;display:grid;place-items:center;
+    flex:0 0 52px;border-radius:15px;font-weight:900;font-size:1.25rem;
+    background:linear-gradient(135deg,var(--primary),var(--primary-2));
+    color:#fff;box-shadow:0 10px 25px rgba(6,182,212,.12);
+}
+.module-info{flex:1;min-width:0}
+.module-info h3{font-size:1.15rem}
+.module-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:5px;color:var(--muted);font-size:.85rem}
+.module-actions{display:flex;align-items:center;gap:12px}
+.complete-btn{
+    border:1px solid rgba(139,92,246,.45);background:rgba(139,92,246,.12);
+    color:#ddd6fe;border-radius:10px;padding:9px 12px;cursor:pointer;
+    transition:.2s ease;
+}
+.complete-btn:hover{background:rgba(139,92,246,.23);transform:translateY(-1px)}
+.complete-btn.completed{
+    border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.12);color:#a7f3d0;
+}
+.module-toggle{color:var(--muted);transition:transform .25s ease}
+.module-card.open .module-toggle{transform:rotate(180deg)}
+.module-content{display:none;border-top:1px solid var(--border)}
+.module-card.open .module-content{display:block}
+.module-body{padding:26px}
+.module-section{margin-bottom:25px}
+.module-section:last-child{margin-bottom:0}
+.module-section-title{font-weight:800;margin-bottom:10px}
+.objectives-list,.contents-list,.activities-list{padding-left:22px;color:#d7e1ef}
+.objectives-list li,.contents-list li,.activities-list li{margin:7px 0}
+.objectives-list li::marker{color:var(--primary)}
+.contents-list li::marker{color:var(--primary-2)}
+.activities-list li::marker{color:var(--success)}
+
+.eval-card{text-align:center}
+.eval-percentage{
+    font-size:2.1rem;font-weight:900;margin-top:15px;
+    background:linear-gradient(90deg,#c4b5fd,#67e8f9);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.resource-card{display:flex;gap:16px;align-items:flex-start}
+.resource-icon{margin:0;flex:0 0 auto}
+.download-btn{
+    margin-top:13px;border:0;border-radius:10px;padding:9px 13px;
+    color:#fff;background:linear-gradient(135deg,var(--primary),#6d28d9);
+    cursor:pointer;transition:.2s ease;
+}
+.download-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+
+.timeline{position:relative;margin:30px 0;padding-left:30px}
+.timeline::before{
+    content:"";position:absolute;left:7px;top:0;bottom:0;width:2px;
+    background:linear-gradient(var(--primary),var(--primary-2));
+}
+.timeline-item{position:relative;margin-bottom:26px;padding:22px;border:1px solid var(--border);border-radius:16px;background:rgba(15,29,49,.72)}
+.timeline-item::before{
+    content:"";position:absolute;left:-30px;top:27px;width:14px;height:14px;
+    border-radius:50%;background:var(--primary-2);box-shadow:0 0 0 5px rgba(6,182,212,.12);
+}
+.timeline-week{display:inline-block;color:#a5f3fc;font-size:.8rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.timeline-item p{color:var(--muted)}
+
+.footer{
+    margin-top:55px;padding:35px 0;text-align:center;
+    color:var(--muted);border-top:1px solid var(--border);
+    background:rgba(5,12,22,.65);
+}
+
+@media (max-width:900px){
+    .intro-grid,.eval-grid,.resources-grid,.tips-grid{grid-template-columns:repeat(2,1fr)}
+    .nav-tabs{top:64px}
+}
+@media (max-width:650px){
+    .container,.nav-tabs-inner{width:min(100% - 22px,1180px)}
+    .progress-info{align-items:flex-start;flex-direction:column;gap:4px}
+    .nav-tabs{top:92px}
+    .section{padding-top:40px}
+    .intro-grid,.eval-grid,.resources-grid,.tips-grid{grid-template-columns:1fr}
+    .module-header{align-items:flex-start;flex-wrap:wrap}
+    .module-actions{width:100%;justify-content:flex-end}
+    .module-body{padding:20px}
+    .resource-card{flex-direction:column}
+}
+
+    
+.adkar-icon{position:relative;width:64px;height:64px;display:grid;place-items:center;margin-bottom:13px;border-radius:16px;color:#67e8f9;background:rgba(6,182,212,.08);border:1px solid rgba(103,232,249,.18)}
+.adkar-svg{width:42px;height:42px}
+.adkar-icon>span{position:absolute;right:-5px;bottom:-5px;width:22px;height:22px;display:grid;place-items:center;border-radius:7px;font-size:.68rem;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2));border:2px solid var(--surface)}
+.adkar-step:nth-child(2) .adkar-icon{color:#c4b5fd;background:rgba(139,92,246,.08);border-color:rgba(196,181,253,.18)}
+.adkar-step:nth-child(4) .adkar-icon{color:#a7f3d0;background:rgba(16,185,129,.08);border-color:rgba(167,243,208,.18)}
+.adkar-step:nth-child(5) .adkar-icon{color:#fcd34d;background:rgba(245,158,11,.08);border-color:rgba(252,211,77,.18)}
+
+.course-hero{display:flex;justify-content:space-between;align-items:center;gap:25px;padding:28px;margin:25px 0;border:1px solid var(--border);border-radius:22px;background:linear-gradient(135deg,rgba(139,92,246,.14),rgba(6,182,212,.07))}.eyebrow,.lesson-type,.case-label{font-size:.7rem;font-weight:900;letter-spacing:.12em;color:#67e8f9}.course-hero h3{font-size:1.65rem;margin:8px 0}.course-hero p{max-width:760px;color:var(--muted)}.course-stat{text-align:center;min-width:130px}.course-stat strong{display:block;font-size:2.4rem}.course-stat span{font-size:.75rem;color:var(--muted)}.course-roadmap{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:25px}.course-tab{border:1px solid var(--border);background:rgba(255,255,255,.025);color:#cbd5e1;border-radius:13px;padding:11px 5px;cursor:pointer;font-weight:900}.course-tab span{font-size:.68rem;font-weight:600}.course-tab:hover,.course-tab.active{background:linear-gradient(135deg,rgba(139,92,246,.24),rgba(6,182,212,.12));border-color:rgba(103,232,249,.45);transform:translateY(-2px)}.course-panel{display:none}.course-panel.active{display:block;animation:courseIn .3s ease}@keyframes courseIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}.lesson-header{display:flex;align-items:center;gap:16px;margin-bottom:25px}.lesson-number{width:58px;height:58px;display:grid;place-items:center;border-radius:17px;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:#fff;font-weight:900;font-size:1.3rem}.lesson-header h3{margin:5px 0 0;font-size:1.5rem}.definition-banner,.barrier-guide{padding:18px 20px;border-left:4px solid #67e8f9;border-radius:10px;background:rgba(6,182,212,.07);margin-bottom:25px;color:#dbeafe}.lesson-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:20px 0}.lesson-grid.two{grid-template-columns:repeat(2,1fr)}.lesson-card{padding:20px;border:1px solid var(--border);border-radius:17px;background:rgba(255,255,255,.025)}.lesson-card h4{margin-bottom:10px}.lesson-card p,.lesson-card li{color:var(--muted);font-size:.92rem;line-height:1.65}.lesson-card ul{padding-left:19px}.case-study,.scenario,.tool-box,.reflection{padding:23px;margin:25px 0;border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.025)}.case-study h3,.scenario h4,.tool-box h4,.reflection h4{margin:7px 0 10px}.case-study p,.scenario p,.tool-box p,.reflection p{color:var(--muted)}.case-question,.mini-callout{margin-top:16px;padding:13px 15px;border-radius:10px;background:rgba(139,92,246,.08);color:#ddd6fe}.choice-grid{display:grid;gap:9px;margin-top:14px}.scenario-choice{padding:13px 15px;text-align:left;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.025);color:#e2e8f0;cursor:pointer}.scenario-choice:hover{border-color:#67e8f9}.scenario-choice.correct{border-color:#34d399;background:rgba(52,211,153,.09)}.scenario-choice.wrong{border-color:#fb7185;background:rgba(251,113,133,.08)}.scenario-feedback{min-height:25px;margin-top:12px;font-weight:700}.input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.input-grid label{font-size:.8rem;color:#cbd5e1}.tool-box textarea,.reflection textarea{width:100%;min-height:110px;margin-top:7px;padding:12px;border:1px solid var(--border);border-radius:10px;background:rgba(0,0,0,.18);color:#f8fafc;resize:vertical;font:inherit}.complete-course-btn,.primary-btn{border:0;border-radius:11px;padding:13px 18px;background:linear-gradient(135deg,var(--primary),var(--primary-2));color:white;font-weight:800;cursor:pointer;margin-top:8px}.complete-course-btn.completed{background:#059669}.knowledge-path,.ability-loop{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:25px 0}.knowledge-path>div{min-width:145px;padding:16px;text-align:center;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.025)}.knowledge-path b{display:grid;place-items:center;width:30px;height:30px;margin:0 auto 8px;border-radius:50%;background:rgba(139,92,246,.2);color:#c4b5fd}.knowledge-path span,.ability-loop span{display:block;font-weight:800}.knowledge-path small{color:var(--muted)}.ability-loop span{padding:13px 17px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.025)}.ability-loop b{color:#67e8f9}.reinforcement-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.reinforcement-grid>div{padding:20px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.025)}.reinforcement-grid b{display:block;font-size:1.6rem;margin-bottom:8px}.reinforcement-grid strong,.reinforcement-grid span{display:block}.reinforcement-grid span{margin-top:5px;color:var(--muted);font-size:.82rem}.diagnostic-form{display:grid;gap:15px;padding:20px;border:1px solid var(--border);border-radius:16px}.diagnostic-form label{display:grid;grid-template-columns:180px 1fr 35px;align-items:center;gap:12px}.diagnostic-form span{font-weight:800}.diagnostic-form output{font-weight:900;color:#67e8f9;text-align:center}.diagnostic-result{display:none;text-align:center;margin-top:20px;padding:25px;border-radius:18px;border:1px solid rgba(103,232,249,.25);background:rgba(6,182,212,.06)}.diagnostic-result.show{display:block}.diagnostic-score{font-size:2.5rem;font-weight:900;color:#67e8f9}.quiz-container{display:grid;gap:18px}.quiz-question{padding:20px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.025)}.quiz-question h4{margin-bottom:12px}.quiz-options{display:grid;gap:8px}.quiz-options label{padding:10px;border:1px solid var(--border);border-radius:9px;color:#cbd5e1;cursor:pointer}.quiz-result{margin-top:20px;padding:18px;border-radius:14px;display:none;background:rgba(139,92,246,.08)}@media(max-width:900px){.course-roadmap{grid-template-columns:repeat(4,1fr)}.lesson-grid,.lesson-grid.two,.input-grid{grid-template-columns:1fr}.reinforcement-grid{grid-template-columns:repeat(2,1fr)}.course-hero{align-items:flex-start}}@media(max-width:600px){.course-roadmap{grid-template-columns:repeat(2,1fr)}.course-hero{display:block}.course-stat{text-align:left;margin-top:18px}.reinforcement-grid{grid-template-columns:1fr}.diagnostic-form label{grid-template-columns:1fr 1fr 30px}}
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div class="progress-bar-container">
+    <div class="container">
+        <div class="progress-info">
+            <div class="progress-title">📊 Tu Progreso en la Guía</div>
+            <div class="progress-stats">
+                <span id="progressText">0 de 5 módulos completados</span>
+                <span id="progressPercent">0%</span>
+            </div>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Tabs -->
+<nav class="nav-tabs">
+    <div class="nav-tabs-inner">
+        <button class="nav-tab active" data-section="intro">🏠 Introducción</button>
+            <button class="nav-tab" data-section="curso">🎓 Curso</button>
+        <button class="nav-tab" data-section="modules">📚 Módulos del Curso</button>
+        <button class="nav-tab" data-section="methodology">🎓 Metodología</button>
+        <button class="nav-tab" data-section="evaluation">📝 Evaluación</button>
+        <button class="nav-tab" data-section="resources">📦 Recursos</button>
+        <button class="nav-tab" data-section="timeline">📅 Cronograma</button>
+        <button class="nav-tab" data-section="tips">💡 Tips para Instructores</button>
+    </div>
+</nav>
+
+<main class="container">
+    <!-- INTRODUCCIÓN -->
+    <section class="section active" id="intro">
+        <h2 class="section-title">¿Por qué crear un curso basado en ADKAR?</h2>
+        <p class="section-subtitle">El modelo ADKAR es el marco más utilizado mundialmente para gestionar el cambio. Esta guía te ayudará a diseñar un curso práctico y efectivo.</p>
+
+        <div class="intro-grid">
+            <div class="intro-card">
+                <div class="intro-card-icon">🎯</div>
+                <h3>Enfoque en las Personas</h3>
+                <p>El curso se centra en el cambio individual, que es donde realmente ocurre la transformación organizacional.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">📏</div>
+                <h3>Estructura Medible</h3>
+                <p>Cada fase tiene indicadores claros que permiten evaluar el progreso de los participantes en tiempo real.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🔄</div>
+                <h3>Secuencial y Lógico</h3>
+                <p>Las 5 fases siguen un orden natural que facilita el aprendizaje y la aplicación práctica.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🌍</div>
+                <h3>Aplicable a Cualquier Contexto</h3>
+                <p>Funciona para cambios tecnológicos, culturales, de procesos o de liderazgo en cualquier industria.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">📊</div>
+                <h3>Basado en Evidencia</h3>
+                <p>Desarrollado por Prosci con más de 25 años de investigación en gestión del cambio.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🚀</div>
+                <h3>Resultados Comprobados</h3>
+                <p>Organizaciones que aplican ADKAR reportan hasta 6 veces más probabilidad de éxito en sus proyectos.</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 ¿A quién va dirigido este curso?</strong>
+            Líderes, gerentes de cambio, consultores, recursos humanos, directores de proyecto y cualquier profesional que necesite implementar transformaciones en su organización.
+        </div>
+    </section>
+
+    <!-- MÓDULOS -->
+    <section class="section" id="modules">
+        <h2 class="section-title">Estructura del Curso: 5 Módulos</h2>
+        <p class="section-subtitle">Cada módulo corresponde a una fase del modelo ADKAR. Haz clic en cada uno para ver los detalles de diseño.</p>
+
+        <!-- MÓDULO 1 -->
+        <div class="module-card module-1" data-module="1">
+            <div class="module-header">
+                <div class="module-number">A</div>
+                <div class="module-info">
+                    <h3>Módulo 1: Awareness (Conciencia)</h3>
+                    <div class="module-meta">
+                        <span>⏱️ 2 horas</span>
+                        <span>📖 4 temas</span>
+                        <span>🎯 3 actividades</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="complete-btn" data-module="1">Marcar completo</button>
+                    <span class="module-toggle">▼</span>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Objetivos de Aprendizaje</div>
+                        <ul class="objectives-list">
+                            <li>Comprender qué es la "Conciencia" en el contexto del cambio</li>
+                            <li>Identificar las razones de negocio que justifican el cambio</li>
+                            <li>Analizar los riesgos de no cambiar (status quo)</li>
+                            <li>Diseñar mensajes efectivos para comunicar la necesidad del cambio</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📖</span> Contenidos</div>
+                        <ul class="contents-list">
+                            <li>Definición de Awareness y su importancia en la secuencia ADKAR</li>
+                            <li>Las 3 preguntas clave: ¿Por qué cambiamos? ¿Qué pasa si no cambiamos? ¿Qué riesgo corremos?</li>
+                            <li>Comunicación efectiva del cambio: canales, mensajes y timing</li>
+                            <li>El rol del liderazgo en la generación de conciencia</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Actividades Prácticas</div>
+                        <ul class="activities-list">
+                            <li><strong>Caso de estudio:</strong> Analizar un caso real de empresa que no generó conciencia y fracasó</li>
+                            <li><strong>Role-play:</strong> Simular una reunión donde se comunica la necesidad de cambio a un equipo resistente</li>
+                            <li><strong>Ejercicio de redacción:</strong> Crear un mensaje de 3 minutos para comunicar un cambio organizacional</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <strong>⚠️ Error común a evitar:</strong>
+                        Saltar directamente a la capacitación (Knowledge) sin antes asegurar que los participantes entienden POR QUÉ deben cambiar.
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📝</span> Evaluación del Módulo</div>
+                        <p>Quiz de 10 preguntas + entrega del mensaje de comunicación diseñado en clase.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2 -->
+        <div class="module-card module-2" data-module="2">
+            <div class="module-header">
+                <div class="module-number">D</div>
+                <div class="module-info">
+                    <h3>Módulo 2: Desire (Deseo)</h3>
+                    <div class="module-meta">
+                        <span>⏱️ 2.5 horas</span>
+                        <span>📖 5 temas</span>
+                        <span>🎯 4 actividades</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="complete-btn" data-module="2">Marcar completo</button>
+                    <span class="module-toggle">▼</span>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Objetivos de Aprendizaje</div>
+                        <ul class="objectives-list">
+                            <li>Entender que el deseo es una decisión personal, no una imposición</li>
+                            <li>Aplicar el concepto WIIFM (What's In It For Me)</li>
+                            <li>Identificar y gestionar la resistencia al cambio</li>
+                            <li>Diseñar estrategias de motivación e incentivos</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📖</span> Contenidos</div>
+                        <ul class="contents-list">
+                            <li>La diferencia entre conciencia (cerebro) y deseo (corazón)</li>
+                            <li>Factores que influyen en el deseo personal: beneficios, miedo, confianza</li>
+                            <li>Modelo de gestión de la resistencia: las 5 fuentes de resistencia</li>
+                            <li>Estrategias para construir deseo: participación, incentivos, visión compartida</li>
+                            <li>Cómo manejar conversaciones difíciles con personas resistentes</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Actividades Prácticas</div>
+                        <ul class="activities-list">
+                            <li><strong>Mapa de stakeholders:</strong> Identificar quiénes son promotores, neutrales y resistentes</li>
+                            <li><strong>Ejercicio WIIFM:</strong> Redactar los beneficios personales del cambio para 3 perfiles diferentes</li>
+                            <li><strong>Simulación:</strong> Conversación 1 a 1 con un empleado resistente</li>
+                            <li><strong>Diseño de incentivos:</strong> Crear un plan de motivación para un equipo específico</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box success">
+                        <strong>✅ Clave del éxito:</strong>
+                        El deseo no se puede forzar. El instructor debe crear un espacio seguro donde los participantes expresen sus preocupaciones reales.
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📝</span> Evaluación del Módulo</div>
+                        <p>Plan de gestión de resistencia + role-play evaluado por pares.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3 -->
+        <div class="module-card module-3" data-module="3">
+            <div class="module-header">
+                <div class="module-number">K</div>
+                <div class="module-info">
+                    <h3>Módulo 3: Knowledge (Conocimiento)</h3>
+                    <div class="module-meta">
+                        <span>⏱️ 3 horas</span>
+                        <span>📖 5 temas</span>
+                        <span>🎯 4 actividades</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="complete-btn" data-module="3">Marcar completo</button>
+                    <span class="module-toggle">▼</span>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Objetivos de Aprendizaje</div>
+                        <ul class="objectives-list">
+                            <li>Diseñar planes de capacitación efectivos para el cambio</li>
+                            <li>Diferenciar los 3 tipos de conocimiento: qué, cómo y cuándo</li>
+                            <li>Seleccionar los métodos de formación adecuados según la audiencia</li>
+                            <li>Crear materiales didácticos alineados con el cambio</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📖</span> Contenidos</div>
+                        <ul class="contents-list">
+                            <li>Los 3 tipos de conocimiento: conocimiento del cambio, conocimiento de cómo cambiar y conocimiento de post-cambio</li>
+                            <li>Diseño instruccional aplicado al cambio organizacional</li>
+                            <li>Métodos de capacitación: presencial, virtual, blended, microlearning</li>
+                            <li>Creación de materiales: manuales, videos, guías rápidas, FAQs</li>
+                            <li>El momento correcto para capacitar (timing estratégico)</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Actividades Prácticas</div>
+                        <ul class="activities-list">
+                            <li><strong>Diseño curricular:</strong> Crear un plan de capacitación para un cambio específico</li>
+                            <li><strong>Creación de material:</strong> Desarrollar una guía rápida de 1 página</li>
+                            <li><strong>Micro-sesión:</strong> Cada participante imparte una mini-capacitación de 5 minutos</li>
+                            <li><strong>Análisis crítico:</strong> Evaluar un programa de capacitación existente y proponer mejoras</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>💡 Principio clave:</strong>
+                        No capacitar demasiado pronto (genera ansiedad) ni demasiado tarde (genera frustración). El timing es fundamental.
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📝</span> Evaluación del Módulo</div>
+                        <p>Entrega del plan de capacitación + mini-sesión evaluada por el instructor.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4 -->
+        <div class="module-card module-4" data-module="4">
+            <div class="module-header">
+                <div class="module-number">A</div>
+                <div class="module-info">
+                    <h3>Módulo 4: Ability (Habilidad)</h3>
+                    <div class="module-meta">
+                        <span>⏱️ 3 horas</span>
+                        <span>📖 4 temas</span>
+                        <span>🎯 4 actividades</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="complete-btn" data-module="4">Marcar completo</button>
+                    <span class="module-toggle">▼</span>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Objetivos de Aprendizaje</div>
+                        <ul class="objectives-list">
+                            <li>Diferenciar conocimiento teórico de habilidad práctica</li>
+                            <li>Diseñar mecanismos de práctica y transferencia al trabajo real</li>
+                            <li>Implementar sistemas de coaching y mentoring</li>
+                            <li>Medir la adopción real del cambio</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📖</span> Contenidos</div>
+                        <ul class="contents-list">
+                            <li>La brecha entre saber y poder hacer: por qué ocurre</li>
+                            <li>Técnicas de práctica deliberada en entornos laborales</li>
+                            <li>El rol del coaching, mentoring y los "campeones del cambio"</li>
+                            <li>Indicadores de habilidad: velocidad, calidad, autonomía</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Actividades Prácticas</div>
+                        <ul class="activities-list">
+                            <li><strong>Simulación real:</strong> Ejecutar el cambio en un entorno controlado con retroalimentación</li>
+                            <li><strong>Programa de campeones:</strong> Diseñar la red de campeones del cambio para una organización</li>
+                            <li><strong>Sesión de coaching:</strong> Practicar técnicas de coaching con un compañero</li>
+                            <li><strong>Dashboard de adopción:</strong> Crear un tablero de métricas para medir la habilidad del equipo</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box warning">
+                        <strong>⚠️ Señal de alerta:</strong>
+                        Si las personas tienen conocimiento pero no habilidad, necesitan más práctica, NO más capacitación teórica.
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📝</span> Evaluación del Módulo</div>
+                        <p>Demostración práctica + diseño del programa de campeones del cambio.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULO 5 -->
+        <div class="module-card module-5" data-module="5">
+            <div class="module-header">
+                <div class="module-number">R</div>
+                <div class="module-info">
+                    <h3>Módulo 5: Reinforcement (Refuerzo)</h3>
+                    <div class="module-meta">
+                        <span>⏱️ 2 horas</span>
+                        <span>📖 4 temas</span>
+                        <span>🎯 3 actividades</span>
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="complete-btn" data-module="5">Marcar completo</button>
+                    <span class="module-toggle">▼</span>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Objetivos de Aprendizaje</div>
+                        <ul class="objectives-list">
+                            <li>Comprender por qué los cambios se revierten sin refuerzo</li>
+                            <li>Diseñar sistemas de reconocimiento y celebración</li>
+                            <li>Implementar mecanismos de seguimiento continuo</li>
+                            <li>Crear una cultura de mejora continua post-cambio</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📖</span> Contenidos</div>
+                        <ul class="contents-list">
+                            <li>La psicología del refuerzo: por qué las personas regresan a lo conocido</li>
+                            <li>Tipos de refuerzo: reconocimiento, incentivos, retroalimentación, auditoría</li>
+                            <li>Celebración de hitos y victorias tempranas</li>
+                            <li>Medición post-implementación y ajustes continuos</li>
+                        </ul>
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">🎯</span> Actividades Prácticas</div>
+                        <ul class="activities-list">
+                            <li><strong>Plan de refuerzo:</strong> Diseñar un plan de 90 días post-implementación</li>
+                            <li><strong>Sistema de reconocimiento:</strong> Crear un programa de celebración de hitos</li>
+                            <li><strong>Auditoría de cambio:</strong> Evaluar un cambio pasado y proponer mejoras de refuerzo</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box success">
+                        <strong>✅ Regla de oro:</strong>
+                        Un cambio no está completo hasta que se ha mantenido por al menos 6 meses sin regresión. El refuerzo es lo que lo hace permanente.
+                    </div>
+
+                    <div class="module-section">
+                        <div class="module-section-title"><span class="icon">📝</span> Evaluación del Módulo</div>
+                        <p>Plan de refuerzo de 90 días + proyecto integrador final.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURSO INTERACTIVO ADKAR -->
+    <section class="section" id="curso">
+      <h2 class="section-title">Curso práctico de Gestión del Cambio con ADKAR®</h2>
+      <p class="section-subtitle">Ruta de aprendizaje para comprender, diagnosticar y acompañar el cambio individual dentro de una iniciativa organizacional.</p>
+      <div class="course-hero"><div><span class="eyebrow">RUTA DE APRENDIZAJE</span><h3>De la comprensión a la adopción sostenible</h3><p>Trabajaremos un caso transversal de implementación de un nuevo sistema de cotizaciones. En cada etapa identificarás qué necesita la persona, qué barrera aparece y qué intervención puede ayudar.</p></div><div class="course-stat"><strong id="courseProgress">0%</strong><span>avance del curso</span></div></div>
+      <div class="course-roadmap"><button class="course-tab active" data-course="intro-course">00<br><span>Fundamentos</span></button><button class="course-tab" data-course="module-a">A<br><span>Conciencia</span></button><button class="course-tab" data-course="module-d">D<br><span>Deseo</span></button><button class="course-tab" data-course="module-k">K<br><span>Conocimiento</span></button><button class="course-tab" data-course="module-ab">A<br><span>Habilidad</span></button><button class="course-tab" data-course="module-r">R<br><span>Refuerzo</span></button><button class="course-tab" data-course="diagnostic">◎<br><span>Diagnóstico</span></button><button class="course-tab" data-course="final-test">✓<br><span>Evaluación</span></button></div>
+      <div class="course-panel active" id="intro-course"><div class="lesson-header"><span class="lesson-number">00</span><div><span class="lesson-type">FUNDAMENTOS</span><h3>¿Cómo funciona ADKAR?</h3></div></div><div class="lesson-grid"><article class="lesson-card"><h4>El cambio empieza en las personas</h4><p>Una organización puede modificar sistemas, procesos, estructuras o tecnologías. Para que una iniciativa produzca resultados, las personas afectadas necesitan adoptar y utilizar la nueva forma de trabajar.</p></article><article class="lesson-card"><h4>Los cinco resultados</h4><p>ADKAR organiza el cambio individual en Awareness, Desire, Knowledge, Ability y Reinforcement. El diagnóstico permite observar dónde existe una barrera.</p></article><article class="lesson-card"><h4>No todo problema es capacitación</h4><p>Si una persona no entiende por qué debe cambiar o no desea participar, aumentar la capacitación puede no resolver la causa. Primero hay que identificar la barrera.</p></article></div><div class="case-study"><span class="case-label">CASO TRANSVERSAL</span><h3>La empresa que quiere modernizar sus cotizaciones</h3><p>Una empresa recibe solicitudes de clientes por diferentes canales. Las cotizaciones se realizan manualmente, existen duplicidades y los tiempos de respuesta son variables. La dirección decide implementar una plataforma digital de cotización.</p><div class="case-question"><strong>Pregunta:</strong> ¿Qué tendría que ocurrir con las personas para que la nueva plataforma realmente sea adoptada?</div></div><button class="complete-course-btn" data-course-complete="intro-course">Marcar fundamento como completado</button></div>
+      <div class="course-panel" id="module-a"><div class="lesson-header"><span class="lesson-number">A</span><div><span class="lesson-type">AWARENESS · CONCIENCIA</span><h3>Comprender por qué es necesario cambiar</h3></div></div><div class="definition-banner"><strong>Resultado esperado:</strong> la persona comprende la naturaleza del cambio, por qué es necesario y qué riesgos o consecuencias están asociados con no realizarlo.</div><div class="lesson-grid two"><article class="lesson-card"><h4>¿Qué debemos comunicar?</h4><ul><li>La situación actual.</li><li>El problema u oportunidad.</li><li>La razón para cambiar.</li><li>Por qué el cambio ocurre ahora.</li><li>Consecuencias de mantener el estado actual.</li><li>Qué significa el cambio para las personas.</li></ul></article><article class="lesson-card"><h4>Señales de una barrera</h4><ul><li>“No entiendo por qué tenemos que cambiar.”</li><li>“Siempre lo hemos hecho así.”</li><li>“No veo qué problema resuelve.”</li><li>La información se interpreta de manera contradictoria.</li></ul></article></div><div class="scenario"><span>ESCENARIO</span><h4>El anuncio del nuevo sistema</h4><p>El director comunica: <em>“A partir del próximo mes utilizaremos una nueva plataforma.”</em></p><p><strong>¿Qué falta para generar Awareness?</strong></p><div class="choice-grid"><button class="scenario-choice" data-correct="true">Explicar el problema actual, la razón del cambio y sus consecuencias.</button><button class="scenario-choice" data-correct="false">Entregar inmediatamente un manual de 80 páginas.</button><button class="scenario-choice" data-correct="false">Pedir al personal que empiece a practicar sin contexto.</button></div><div class="scenario-feedback"></div></div><div class="tool-box"><h4>Herramienta: mapa de conciencia</h4><div class="input-grid"><label>¿Qué problema estamos resolviendo?<textarea data-reflection="awareness-problem" placeholder="Describe el problema..."></textarea></label><label>¿Por qué debemos cambiar ahora?<textarea data-reflection="awareness-why" placeholder="Explica la razón..."></textarea></label><label>¿Qué ocurre si no cambiamos?<textarea data-reflection="awareness-risk" placeholder="Describe las consecuencias..."></textarea></label></div></div><button class="complete-course-btn" data-course-complete="module-a">Completar módulo A</button></div>
+      <div class="course-panel" id="module-d"><div class="lesson-header"><span class="lesson-number">D</span><div><span class="lesson-type">DESIRE · DESEO</span><h3>Convertir la comprensión en voluntad de participar</h3></div></div><div class="definition-banner"><strong>Resultado esperado:</strong> la persona decide participar y apoyar el cambio. Comprender la necesidad no significa automáticamente querer cambiar.</div><div class="lesson-grid two"><article class="lesson-card"><h4>Factores que pueden influir</h4><ul><li>Beneficios percibidos.</li><li>Impacto personal y profesional.</li><li>Confianza en el liderazgo.</li><li>Experiencias anteriores con cambios.</li><li>Percepción de pérdida o riesgo.</li><li>Participación e involucramiento.</li></ul></article><article class="lesson-card"><h4>Diagnóstico</h4><p>Pregunta antes de intervenir: <strong>¿Qué está haciendo que esta persona quiera o no quiera participar?</strong></p><div class="mini-callout">Una resistencia visible puede ser un síntoma; conviene investigar la causa antes de etiquetar a la persona.</div></article></div><div class="scenario"><span>ESCENARIO</span><h4>“Estoy de acuerdo, pero no quiero usarlo”</h4><p>Una colaboradora entiende las razones del proyecto, pero considera que el nuevo sistema aumentará su carga de trabajo.</p><div class="choice-grid"><button class="scenario-choice" data-correct="false">Mandarla directamente a capacitación técnica.</button><button class="scenario-choice" data-correct="true">Investigar su preocupación y comprender qué factores afectan su decisión de participar.</button><button class="scenario-choice" data-correct="false">Asumir que es resistencia al cambio y terminar la conversación.</button></div><div class="scenario-feedback"></div></div><div class="reflection"><h4>Pregunta de reflexión</h4><p>¿Qué beneficio tendría una persona concreta al adoptar el cambio? ¿Qué podría percibir que perderá?</p><textarea data-reflection="desire-reflection" placeholder="Escribe tu análisis..."></textarea></div><button class="complete-course-btn" data-course-complete="module-d">Completar módulo D</button></div>
+      <div class="course-panel" id="module-k"><div class="lesson-header"><span class="lesson-number">K</span><div><span class="lesson-type">KNOWLEDGE · CONOCIMIENTO</span><h3>Saber cómo realizar el cambio</h3></div></div><div class="definition-banner"><strong>Resultado esperado:</strong> la persona posee información y formación suficiente para comprender cómo cambiar y qué conocimientos necesita para desempeñar la nueva forma de trabajo.</div><div class="knowledge-path"><div><b>1</b><span>Información</span><small>¿Qué está cambiando?</small></div><div><b>2</b><span>Proceso</span><small>¿Cuál será la nueva forma?</small></div><div><b>3</b><span>Herramienta</span><small>¿Qué debo utilizar?</small></div><div><b>4</b><span>Formación</span><small>¿Qué necesito aprender?</small></div></div><div class="lesson-grid two"><article class="lesson-card"><h4>Capacitación efectiva</h4><p>El contenido debe corresponder al cambio real: procesos, herramientas, habilidades y comportamientos. Conviene considerar el momento de la formación y las necesidades de cada grupo.</p></article><article class="lesson-card"><h4>Knowledge no es Ability</h4><p>Una persona puede saber qué hacer y aun así no ejecutar correctamente la nueva práctica. La aplicación real se aborda en el siguiente elemento.</p></article></div><div class="scenario"><span>ESCENARIO</span><h4>¿Por qué la capacitación no funcionó?</h4><p>El equipo asistió a un curso de dos horas, aprobó una prueba teórica y, al volver al trabajo, siguió utilizando el procedimiento anterior.</p><div class="choice-grid"><button class="scenario-choice" data-correct="false">La solución siempre es repetir el mismo curso.</button><button class="scenario-choice" data-correct="true">Hay que investigar si el problema está en conocimiento, habilidad, barreras del entorno u otro elemento del cambio.</button><button class="scenario-choice" data-correct="false">La aprobación del examen demuestra que el cambio ya fue adoptado.</button></div><div class="scenario-feedback"></div></div><button class="complete-course-btn" data-course-complete="module-k">Completar módulo K</button></div>
+      <div class="course-panel" id="module-ab"><div class="lesson-header"><span class="lesson-number">A</span><div><span class="lesson-type">ABILITY · HABILIDAD</span><h3>Convertir el conocimiento en desempeño</h3></div></div><div class="definition-banner"><strong>Resultado esperado:</strong> la persona puede demostrar en la práctica los comportamientos, habilidades o procesos requeridos por el cambio.</div><div class="ability-loop"><span>Conocimiento</span><b>→</b><span>Práctica</span><b>→</b><span>Retroalimentación</span><b>→</b><span>Corrección</span><b>→</b><span>Desempeño</span></div><div class="lesson-grid two"><article class="lesson-card"><h4>Cómo desarrollar Ability</h4><ul><li>Práctica en condiciones reales o simuladas.</li><li>Acompañamiento y coaching.</li><li>Retroalimentación específica.</li><li>Tiempo para desarrollar dominio.</li><li>Eliminación de barreras operativas.</li></ul></article><article class="lesson-card"><h4>Indicadores observables</h4><ul><li>La persona ejecuta el proceso.</li><li>Disminuyen errores.</li><li>El tiempo de ejecución mejora.</li><li>Solicita menos asistencia.</li><li>Utiliza la nueva herramienta en el trabajo real.</li></ul></article></div><div class="scenario"><span>ESCENARIO</span><h4>Lo sabe, pero vuelve al proceso anterior</h4><p>Un empleado conoce el nuevo sistema y puede explicar sus funciones, pero ante una solicitud real vuelve a Excel porque el nuevo flujo le resulta lento.</p><div class="choice-grid"><button class="scenario-choice" data-correct="true">Observar la ejecución, identificar el obstáculo y practicar hasta conseguir el desempeño requerido.</button><button class="scenario-choice" data-correct="false">Concluir que no aprendió nada.</button><button class="scenario-choice" data-correct="false">Enviar nuevamente el manual sin observar su trabajo.</button></div><div class="scenario-feedback"></div></div><button class="complete-course-btn" data-course-complete="module-ab">Completar módulo A de Ability</button></div>
+      <div class="course-panel" id="module-r"><div class="lesson-header"><span class="lesson-number">R</span><div><span class="lesson-type">REINFORCEMENT · REFUERZO</span><h3>Hacer que el cambio permanezca</h3></div></div><div class="definition-banner"><strong>Resultado esperado:</strong> existen mecanismos que ayudan a sostener la nueva forma de trabajar y reducen la posibilidad de regresar al comportamiento anterior.</div><div class="reinforcement-grid"><div><b>📊</b><strong>Medición</strong><span>Verificar adopción y resultados.</span></div><div><b>👏</b><strong>Reconocimiento</strong><span>Reconocer comportamientos deseados.</span></div><div><b>🔁</b><strong>Seguimiento</strong><span>Revisar periódicamente el avance.</span></div><div><b>🧭</b><strong>Corrección</strong><span>Actuar ante desviaciones o regresión.</span></div></div><div class="scenario"><span>ESCENARIO</span><h4>El sistema funciona... durante un mes</h4><p>Después del lanzamiento, los indicadores mejoran. Dos meses después, algunas personas vuelven a sus hojas de cálculo anteriores.</p><div class="choice-grid"><button class="scenario-choice" data-correct="true">Establecer seguimiento, medición, retroalimentación y mecanismos que sostengan el nuevo comportamiento.</button><button class="scenario-choice" data-correct="false">Cerrar el proyecto porque el lanzamiento ya terminó.</button><button class="scenario-choice" data-correct="false">Eliminar inmediatamente el proceso anterior sin analizar las causas.</button></div><div class="scenario-feedback"></div></div><div class="reflection"><h4>Diseña tu sistema de refuerzo</h4><textarea data-reflection="reinforcement-plan" placeholder="¿Qué medirás? ¿Quién dará seguimiento? ¿Cómo reconocerás avances? ¿Qué harás si aparece regresión?"></textarea></div><button class="complete-course-btn" data-course-complete="module-r">Completar módulo R</button></div>
+      <div class="course-panel" id="diagnostic"><div class="lesson-header"><span class="lesson-number">◎</span><div><span class="lesson-type">DIAGNÓSTICO</span><h3>Encuentra el punto de barrera</h3></div></div><p>Evalúa una situación concreta de 1 a 5. Esta herramienta es educativa y sirve para estructurar una conversación diagnóstica; no sustituye una evaluación profesional.</p><div class="diagnostic-form"><label><span>A — Conciencia</span><input type="range" min="1" max="5" value="3" data-adkar="A1"><output>3</output></label><label><span>D — Deseo</span><input type="range" min="1" max="5" value="3" data-adkar="D"><output>3</output></label><label><span>K — Conocimiento</span><input type="range" min="1" max="5" value="3" data-adkar="K"><output>3</output></label><label><span>A — Habilidad</span><input type="range" min="1" max="5" value="3" data-adkar="A2"><output>3</output></label><label><span>R — Refuerzo</span><input type="range" min="1" max="5" value="3" data-adkar="R"><output>3</output></label></div><button id="analyzeAdkar" class="primary-btn">Analizar punto de barrera</button><div id="diagnosticResult" class="diagnostic-result"><div class="diagnostic-score">—</div><h3>Resultado del diagnóstico</h3><p>Mueve los indicadores y ejecuta el análisis.</p></div><div class="barrier-guide"><h4>Regla didáctica</h4><p>El diagnóstico busca identificar el <strong>primer elemento con menor desarrollo</strong>. Ese punto orienta la conversación sobre qué intervención investigar primero.</p></div></div>
+      <div class="course-panel" id="final-test"><div class="lesson-header"><span class="lesson-number">✓</span><div><span class="lesson-type">EVALUACIÓN FINAL</span><h3>Comprueba lo aprendido</h3></div></div><div id="quizContainer" class="quiz-container"></div><button id="finishQuiz" class="primary-btn">Calificar evaluación</button><div id="quizResult" class="quiz-result"></div><button class="complete-course-btn" data-course-complete="final-test">Registrar evaluación completada</button></div>
+    </section>
+
+    <!-- METODOLOGÍA -->
+    <section class="section" id="methodology">
+        <h2 class="section-title">Metodología de Enseñanza</h2>
+        <p class="section-subtitle">Un enfoque práctico y experiencial que combina teoría, práctica y reflexión.</p>
+
+        <div class="intro-grid">
+            <div class="intro-card">
+                <div class="intro-card-icon">🎓</div>
+                <h3>Aprendizaje Experiencial</h3>
+                <p>70% práctica, 20% reflexión, 10% teoría. Los participantes aprenden haciendo.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">💬</div>
+                <h3>Aprendizaje Colaborativo</h3>
+                <p>Trabajos en grupo, discusiones y role-plays que simulan situaciones reales.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🏢</div>
+                <h3>Casos Reales</h3>
+                <p>Análisis de casos de empresas reales para conectar la teoría con la práctica.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🔄</div>
+                <h3>Proyecto Aplicado</h3>
+                <p>Cada participante desarrolla un proyecto real de su propia organización.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">🎯</div>
+                <h3>Coaching Personalizado</h3>
+                <p>Acompañamiento individual para resolver desafíos específicos de cada participante.</p>
+            </div>
+            <div class="intro-card">
+                <div class="intro-card-icon">📊</div>
+                <h3>Evaluación Continua</h3>
+                <p>Feedback constante y autoevaluación con el modelo ADKAR como herramienta.</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <strong>🎯 Fórmula recomendada para cada sesión:</strong>
+            <p style="margin-top: 10px;">
+                1. <strong>Apertura (10%):</strong> Conexión con el tema anterior<br>
+                2. <strong>Teoría (20%):</strong> Conceptos clave con ejemplos<br>
+                3. <strong>Práctica (50%):</strong> Actividades, casos, role-plays<br>
+                4. <strong>Reflexión (15%):</strong> Discusión grupal y conclusiones<br>
+                5. <strong>Cierre (5%):</strong> Compromisos y tarea para la siguiente sesión
+            </p>
+        </div>
+    </section>
+
+    <!-- EVALUACIÓN -->
+    <section class="section" id="evaluation">
+        <h2 class="section-title">Sistema de Evaluación</h2>
+        <p class="section-subtitle">Evaluación integral que mide conocimientos, habilidades y aplicación práctica.</p>
+
+        <div class="eval-grid">
+            <div class="eval-card">
+                <div class="eval-icon">📝</div>
+                <h3>Quizzes por Módulo</h3>
+                <p>Evaluaciones cortas al final de cada módulo para verificar comprensión</p>
+                <div class="eval-percentage">20%</div>
+            </div>
+            <div class="eval-card">
+                <div class="eval-icon">🎯</div>
+                <h3>Actividades Prácticas</h3>
+                <p>Ejercicios, role-plays y casos aplicados en cada sesión</p>
+                <div class="eval-percentage">30%</div>
+            </div>
+            <div class="eval-card">
+                <div class="eval-icon">📊</div>
+                <h3>Proyecto Final</h3>
+                <p>Plan completo de gestión del cambio aplicado a una organización real</p>
+                <div class="eval-percentage">40%</div>
+            </div>
+            <div class="eval-card">
+                <div class="eval-icon">💬</div>
+                <h3>Participación</h3>
+                <p>Contribución activa en discusiones, trabajo en equipo y peer-review</p>
+                <div class="eval-percentage">10%</div>
+            </div>
+        </div>
+
+        <div class="info-box success" style="margin-top: 40px;">
+            <strong>🏆 Criterios de aprobación:</strong>
+            <p style="margin-top: 10px;">
+                • Nota mínima: 70/100<br>
+                • Asistencia mínima: 80% de las sesiones<br>
+                • Entrega del proyecto final completo<br>
+                • Autoevaluación ADKAR con progreso demostrado
+            </p>
+        </div>
+    </section>
+
+    <!-- RECURSOS -->
+    <section class="section" id="resources">
+        <h2 class="section-title">Recursos para el Instructor</h2>
+        <p class="section-subtitle">Material descargable para facilitar la implementación del curso.</p>
+
+        <div class="resources-grid">
+            <div class="resource-card">
+                <div class="resource-icon">📋</div>
+                <div class="resource-info">
+                    <h3>Guía del Instructor</h3>
+                    <p>Manual completo con plan de sesiones, tiempos y facilitación</p>
+                    <button class="download-btn" onclick="downloadResource('guia-instructor.pdf')">Descargar PDF</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">📊</div>
+                <div class="resource-info">
+                    <h3>Plantilla ADKAR Assessment</h3>
+                    <p>Encuesta para evaluar el progreso de los participantes</p>
+                    <button class="download-btn" onclick="downloadResource('adkar-assessment.xlsx')">Descargar Excel</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">🎨</div>
+                <div class="resource-info">
+                    <h3>Presentaciones Editables</h3>
+                    <p>Diapositivas en PowerPoint para cada módulo del curso</p>
+                    <button class="download-btn" onclick="downloadResource('presentaciones.pptx')">Descargar PPTX</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">📚</div>
+                <div class="resource-info">
+                    <h3>Casos de Estudio</h3>
+                    <p>5 casos reales de empresas con sus soluciones ADKAR</p>
+                    <button class="download-btn" onclick="downloadResource('casos-estudio.pdf')">Descargar PDF</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">🎯</div>
+                <div class="resource-info">
+                    <h3>Guía de Actividades</h3>
+                    <p>Instrucciones detalladas para role-plays y ejercicios</p>
+                    <button class="download-btn" onclick="downloadResource('actividades.pdf')">Descargar PDF</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">📝</div>
+                <div class="resource-info">
+                    <h3>Banco de Preguntas</h3>
+                    <p>100+ preguntas para quizzes y evaluaciones</p>
+                    <button class="download-btn" onclick="downloadResource('banco-preguntas.docx')">Descargar DOCX</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">📈</div>
+                <div class="resource-info">
+                    <h3>Plantilla de Proyecto Final</h3>
+                    <p>Estructura para que los participantes desarrollen su proyecto</p>
+                    <button class="download-btn" onclick="downloadResource('proyecto-final.docx')">Descargar DOCX</button>
+                </div>
+            </div>
+            <div class="resource-card">
+                <div class="resource-icon">🎬</div>
+                <div class="resource-info">
+                    <h3>Videos de Apoyo</h3>
+                    <p>Lista curada de videos para complementar cada módulo</p>
+                    <button class="download-btn" onclick="downloadResource('videos.pdf')">Ver Lista</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CRONOGRAMA -->
+    <section class="section" id="timeline">
+        <h2 class="section-title">Cronograma Sugerido</h2>
+        <p class="section-subtitle">Distribución recomendada para un curso de 8 semanas con sesiones semanales.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 1</span>
+                <h3>Introducción y Módulo 1: Awareness</h3>
+                <p>Bienvenida, presentación del curso, marco conceptual del cambio y primera fase ADKAR. Sesión de 3 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 2</span>
+                <h3>Módulo 2: Desire (Parte 1)</h3>
+                <p>Psicología del deseo, WIIFM, factores que influyen en la decisión personal de cambiar. Sesión de 2.5 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 3</span>
+                <h3>Módulo 2: Desire (Parte 2) + Taller</h3>
+                <p>Gestión de resistencia y taller práctico de role-play con casos reales. Sesión de 2.5 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 4</span>
+                <h3>Módulo 3: Knowledge (Parte 1)</h3>
+                <p>Diseño instruccional, tipos de conocimiento y métodos de capacitación. Sesión de 3 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 5</span>
+                <h3>Módulo 3: Knowledge (Parte 2) + Micro-sesiones</h3>
+                <p>Creación de materiales y micro-sesiones de capacitación impartidas por los participantes. Sesión de 3 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 6</span>
+                <h3>Módulo 4: Ability</h3>
+                <p>De la teoría a la práctica, coaching, programa de campeones del cambio. Sesión de 3 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 7</span>
+                <h3>Módulo 5: Reinforcement</h3>
+                <p>Sistemas de refuerzo, reconocimiento, seguimiento post-implementación. Sesión de 2 horas.</p>
+            </div>
+            <div class="timeline-item">
+                <span class="timeline-week">Semana 8</span>
+                <h3>Presentación de Proyectos Finales</h3>
+                <p>Los participantes presentan sus planes ADKAR aplicados a organizaciones reales. Sesión de 3 horas.</p>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 40px;">
+            <strong>⏱️ Duración total del curso:</strong>
+            <p style="margin-top: 10px;">
+                • <strong>Horas presenciales:</strong> 22.5 horas (8 sesiones)<br>
+                • <strong>Trabajo autónomo:</strong> 20-30 horas aproximadamente<br>
+                • <strong>Proyecto final:</strong> 10-15 horas adicionales<br>
+                • <strong>Total estimado:</strong> 52-67 horas de dedicación
+            </p>
+        </div>
+    </section>
+
+    <!-- TIPS -->
+    <section class="section" id="tips">
+        <h2 class="section-title">Tips para Instructores</h2>
+        <p class="section-subtitle">Consejos prácticos para maximizar el impacto de tu curso.</p>
+
+        <div class="tips-grid">
+            <div class="tip-card">
+                <h3>🎯 Respeta la Secuencia</h3>
+                <p>No saltes fases. Si los participantes no tienen conciencia, no pierdas tiempo con capacitación. Vuelve al inicio.</p>
+            </div>
+            <div class="tip-card">
+                <h3>💬 Crea Espacios Seguros</h3>
+                <p>La resistencia al cambio es emocional. Permite que los participantes expresen sus miedos sin juicio.</p>
+            </div>
+            <div class="tip-card">
+                <h3>🏢 Usa Casos Reales</h3>
+                <p>Pide a los participantes que traigan ejemplos de su propia organización. El aprendizaje será más significativo.</p>
+            </div>
+            <div class="tip-card">
+                <h3>🔄 Practica lo que Predicas</h3>
+                <p>Aplica ADKAR en tu propio curso: genera conciencia del valor del curso, crea deseo, da conocimiento, permite practicar y refuerza los logros.</p>
+            </div>
+            <div class="tip-card">
+                <h3>📊 Mide el Progreso</h3>
+                <p>Aplica el ADKAR Assessment al inicio y al final. Los participantes verán su propio progreso y se motivarán.</p>
+            </div>
+            <div class="tip-card">
+                <h3>🎉 Celebra las Victorias</h3>
+                <p>Reconoce públicamente los avances de los participantes. El refuerzo positivo acelera el aprendizaje.</p>
+            </div>
+            <div class="tip-card">
+                <h3>👥 Fomenta la Red de Campeones</h3>
+                <p>Identifica a los participantes más entusiastas y conviértelos en embajadores del cambio en sus organizaciones.</p>
+            </div>
+            <div class="tip-card">
+                <h3>📚 Actualízate Constantemente</h3>
+                <p>Mantente al día con las últimas investigaciones de Prosci y casos de éxito recientes para mantener el curso fresco.</p>
+            </div>
+            <div class="tip-card">
+                <h3>⚡ Sé Flexible</h3>
+                <p>Si el grupo necesita más tiempo en una fase, dáselo. La calidad del aprendizaje es más importante que cumplir el cronograma.</p>
+            </div>
+        </div>
+
+        <div class="info-box success" style="margin-top: 40px;">
+            <strong>🌟 El mejor consejo:</strong>
+            <p style="margin-top: 10px;">
+                Tu rol como instructor no es solo enseñar ADKAR, sino <strong>vivir ADKAR</strong>. Si tú aplicas el modelo con tus propios participantes, ellos lo entenderán de forma visceral y podrán replicarlo con sus equipos.
+            </p>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p><strong>Guía para Desarrollar un Curso con el Modelo ADKAR</strong></p>
+        <p>Basado en la metodología de Prosci® - Jeff Hiatt</p>
+        <p style="margin-top: 15px; opacity: 0.6;">© 2026 - Material educativo para instructores</p>
+    </div>
+</footer>
+
+<script>
+// Navegación entre secciones
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const sections = document.querySelectorAll('.section');
+
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const targetSection = tab.dataset.section;
+            
+            navTabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(targetSection).classList.add('active');
+            
+            window.scrollTo({ top: 300, behavior: 'smooth' });
+        });
+    });
+
+    // Módulos expandibles
+    const moduleHeaders = document.querySelectorAll('.module-header');
+    moduleHeaders.forEach(header => {
+        header.addEventListener('click', (e) => {
+            if (e.target.classList.contains('complete-btn')) return;
+            const card = header.closest('.module-card');
+            card.classList.toggle('open');
+        });
+    });
+
+    // Sistema de progreso con localStorage
+    const completeBtns = document.querySelectorAll('.complete-btn');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const progressPercent = document.getElementById('progressPercent');
+
+    function loadProgress() {
+        const saved = JSON.parse(localStorage.getItem('adkarProgress') || '{}');
+        let completed = 0;
+        
+        completeBtns.forEach(btn => {
+            const moduleId = btn.dataset.module;
+            if (saved[moduleId]) {
+                btn.classList.add('completed');
+                btn.textContent = '✓ Completado';
+                completed++;
+            }
+        });
+        
+        updateProgressUI(completed);
+    }
+
+    function updateProgressUI(completed) {
+        const total = 5;
+        const percent = Math.round((completed / total) * 100);
+        
+        progressFill.style.width = percent + '%';
+        progressText.textContent = `${completed} de ${total} módulos completados`;
+        progressPercent.textContent = percent + '%';
+        
+        if (completed === total) {
+            progressFill.style.background = 'linear-gradient(90deg, #10b981 0%, #06b6d4 50%, #8b5cf6 100%)';
+        }
+    }
+
+    completeBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const moduleId = btn.dataset.module;
+            const saved = JSON.parse(localStorage.getItem('adkarProgress') || '{}');
+            
+            if (saved[moduleId]) {
+                delete saved[moduleId];
+                btn.classList.remove('completed');
+                btn.textContent = 'Marcar completo';
+            } else {
+                saved[moduleId] = true;
+                btn.classList.add('completed');
+                btn.textContent = '✓ Completado';
+            }
+            
+            localStorage.setItem('adkarProgress', JSON.stringify(saved));
+            
+            const completed = completeBtns.length
+                ? [...completeBtns].filter(btn => btn.classList.contains('completed')).length
+                : 0;
+            updateProgressUI(completed);
+        });
+    });
+
+    // Función simulada de descarga de recursos
+    function downloadResource(filename) {
+        alert(`📥 Recurso: ${filename}\n\nEsta es una simulación. En un entorno real, aquí se descargaría el archivo correspondiente.\n\nPuedes conectar esto con tu servidor o servicio de almacenamiento (Google Drive, Dropbox, etc.)`);
+    }
+
+    // Cargar progreso al iniciar
+    loadProgress();
+
+    console.log('📘 Guía de Curso ADKAR cargada exitosamente');
+    console.log('💡 Tu progreso se guarda automáticamente en el navegador');
+
+(function(){const key='adkarCourseV2';let state=JSON.parse(localStorage.getItem(key)||'{}');const save=()=>localStorage.setItem(key,JSON.stringify(state));document.querySelectorAll('.course-tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.course-tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.course-panel').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById(t.dataset.course).classList.add('active')}));function progress(){const a=[...document.querySelectorAll('[data-course-complete]')],d=a.filter(b=>state.completed&&state.completed[b.dataset.courseComplete]).length,e=document.getElementById('courseProgress');if(e)e.textContent=(a.length?Math.round(d/a.length*100):0)+'%'}document.querySelectorAll('[data-course-complete]').forEach(b=>{const k=b.dataset.courseComplete;if(state.completed&&state.completed[k]){b.classList.add('completed');b.textContent='✓ Completado'}b.addEventListener('click',()=>{state.completed=state.completed||{};state.completed[k]=true;save();b.classList.add('completed');b.textContent='✓ Completado';progress()})});document.querySelectorAll('.scenario-choice').forEach(c=>c.addEventListener('click',()=>{const box=c.closest('.scenario');box.querySelectorAll('.scenario-choice').forEach(x=>x.classList.remove('correct','wrong'));const f=box.querySelector('.scenario-feedback');if(c.dataset.correct==='true'){c.classList.add('correct');f.textContent='✓ Correcto. La intervención debe partir del diagnóstico de la barrera.';f.style.color='#34d399'}else{c.classList.add('wrong');f.textContent='✗ Revisa el elemento ADKAR implicado y evita asumir que una única intervención resuelve todas las barreras.';f.style.color='#fb7185'}}));document.querySelectorAll('[data-reflection]').forEach(f=>{const k=f.dataset.reflection;if(state.reflections&&state.reflections[k])f.value=state.reflections[k];f.addEventListener('input',()=>{state.reflections=state.reflections||{};state.reflections[k]=f.value;save()})});document.querySelectorAll('[data-adkar]').forEach(i=>{const o=i.parentElement.querySelector('output'),k=i.dataset.adkar;if(state.diagnostic&&state.diagnostic[k])i.value=state.diagnostic[k];o.textContent=i.value;i.addEventListener('input',()=>{o.textContent=i.value;state.diagnostic=state.diagnostic||{};state.diagnostic[k]=+i.value;save()})});document.getElementById('analyzeAdkar').addEventListener('click',()=>{const d=[['A — Conciencia','A1'],['D — Deseo','D'],['K — Conocimiento','K'],['A — Habilidad','A2'],['R — Refuerzo','R']].map(x=>({name:x[0],v:+document.querySelector('[data-adkar="'+x[1]+'"]').value})),m=Math.min(...d.map(x=>x.v)),b=d.find(x=>x.v===m),r=document.getElementById('diagnosticResult');r.classList.add('show');r.querySelector('.diagnostic-score').textContent=b.v+'/5';r.querySelector('h3').textContent='Punto de barrera: '+b.name;r.querySelector('p').textContent='El valor más bajo es '+b.name+'. Utiliza este resultado como punto de partida para investigar causas y seleccionar una intervención adecuada.'});const qs=[['Una persona entiende por qué se necesita un nuevo proceso, pero no quiere participar. ¿Qué elemento requiere mayor atención?',['Awareness','Desire','Knowledge','Ability'],1],['¿Qué describe mejor Knowledge?',['La motivación para cambiar','La práctica hasta dominar una habilidad','El conocimiento sobre cómo realizar el cambio','El seguimiento posterior'],2],['Una persona aprobó la capacitación pero no ejecuta correctamente el proceso. ¿Qué elemento debe investigarse?',['Awareness','Desire','Ability','Reinforcement'],2],['¿Cuál es el propósito principal de Reinforcement?',['Explicar por primera vez el cambio','Consolidar el cambio y reducir la regresión','Sustituir la capacitación','Diseñar el proyecto técnico'],1],['¿Por qué es útil identificar un punto de barrera?',['Para asignar una sanción','Para determinar qué elemento requiere atención antes de asumir una solución','Para eliminar la comunicación','Para evitar medir resultados'],1]];const qc=document.getElementById('quizContainer');qc.innerHTML=qs.map((q,i)=>'<div class="quiz-question"><h4>'+(i+1)+'. '+q[0]+'</h4><div class="quiz-options">'+q[1].map((a,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"> '+a+'</label>').join('')+'</div></div>').join('');document.getElementById('finishQuiz').addEventListener('click',()=>{let s=0,a=0;qs.forEach((q,i)=>{const x=document.querySelector('input[name="q'+i+'"]:checked');if(x){a++;if(+x.value===q[2])s++}});const p=Math.round(s/qs.length*100),r=document.getElementById('quizResult');r.style.display='block';r.innerHTML='<strong>Resultado: '+s+'/'+qs.length+' ('+p+'%)</strong><br>'+(a<qs.length?'Hay preguntas sin responder. Puedes volver a intentarlo.':p>=80?'Buen dominio de los fundamentos.':'Conviene repasar los módulos y volver a intentar la evaluación.');state.quiz={score:s,pct:p,ans:a};save()});progress()})();
+</script>
+</body>
+</html>
